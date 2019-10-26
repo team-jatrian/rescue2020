@@ -63,15 +63,15 @@ motors::setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
   }
 
 motors::NewSpeed(int8_t nSetSpeed, int8_t &nCurrentSpeed){
-  if (nSetSpeed > &nCurrentSpeed){
+  if (nSetSpeed > nCurrentSpeed){
     nCurrentSpeed += 5;
-    return &nCurrentSpeed;
+    return nCurrentSpeed;
   }
-  else if (nSetSpeed < &nCurrentSpeed){
-    &nCurrentSpeed -= 5;
-    return &nCurrentSpeed;
+  else if (nSetSpeed < nCurrentSpeed){
+    nCurrentSpeed -= 5;
+    return nCurrentSpeed;
   }
   else {
-    return &nCurrentSpeed;
+    return nCurrentSpeed;
   }
 }
