@@ -1,30 +1,51 @@
 class motors {
-  public:
-  int8_t bLeftSpeed;
-  int8_t bRightSpeed;
-  int8_t bMaxLeftSpeed = 255;
-  int8_t bMaxRightSpeed = 255;
-  
-  uint8_t AENBL = 2; 
-  uint8_t APHASE = 23;
-  uint8_t BENBL = 0;
-  uint8_t BPHASE = 26;
-
-
   private:
-  int8_t bLeftMappedSpeed;
-  int8_t bRightMappedSpeed;
-  uint8_t nOutputPins[4] = {AENBL, APHASE, BENBL, BPHASE};
+    uint8_t ubLeftMappedSpeed;
+    uint8_t ubRightMappedSpeed;
+    uint8_t unOutputPins[4] = {AENBL, APHASE, BENBL, BPHASE};
+  public:
+    uint8_t ubLeftSpeed;
+    uint8_t ubRightSpeed;
+    uint8_t ubMaxLeftSpeed = 255;
+    uint8_t ubMaxRightSpeed = 255;
 
-  void initPins(){
-    for(uint8_t i = 0; i <= (sizeof(nOutputPins) / sizeof(uint8_t)); i++){
-      pinMode(nOutputPins[i], OUTPUT);
+    uint8_t AENBL = 2;
+    uint8_t APHASE = 23;
+    uint8_t BENBL = 0;
+    uint8_t BPHASE = 26;
+
+
+    void initPins(){
+      for(uint8_t i = 0; i <= (sizeof(nOutputPins) / sizeof(uint8_t)); i++){
+        pinMode(nOutputPins[i], OUTPUT);
+      }
     }
-  }
-  
-  void drive(int8_t nLeftSpeed, int8_t nRightSpeed){
-    bLeftMappedSpeed = map(abs(nLeftSpeed), 0, 100, 0, bMaxLeftSpeed);
-    bRightMappedSpeed = map(abs(nRightSpeed), 0, 100, 0, bMaxRightSpeed);
-    
+
+    void setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
+      if (nLeftSpeed < 0 && nRightSpeed < 0){
+        digitalWrite(APHASE, HIGH);
+        digitalWrite(BPHASE, LOW);
+      }
+      else if (nLeftSpeed < 0){
+        digitalWrite(APHASE, HIGH);
+        digitalWrite(BPHASE, HIGH);
+      }
+      else if (nRightSpeed < 0){
+        digitalWrite(APHASE, LOW);
+        digitalWrite(BPHASE, HIGH);
+      }
+      else{
+        digitalWrite(APHASE, LOW);
+        digitalWrite(BPHASE, HIGH);
+      }
+    }
+
+    void drive(int8_t nLeftSpeed, int8_t nRightSpeed){
+      ubLeftMappedSpeed = map(abs(nLeftSpeed), 0, 100, 0, ubMaxLeftSpeed);
+      ubRightMappedSpeed = map(abs(nRightSpeed), 0, 100, 0, ubMaxRightSpeed);
+      setPhase(nLeftSpeed, nRightSpeed);
+
+
+
   }
 };
