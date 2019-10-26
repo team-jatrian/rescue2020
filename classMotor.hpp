@@ -5,7 +5,6 @@ class motor {
     //genaue assignments noch fixen
     void setPhase(int8_t);
     uint8_t NewSpeed(uint8_t, uint8_t&);
-    void drive(int8_t);
 
   public:
     uint8_t ubSpeed;
@@ -14,6 +13,8 @@ class motor {
     uint8_t ENBL;
     uint8_t PHASE;
     uint8_t ubEngineSwitch;
+
+    void drive(int8_t);
 
     void initPins(){
       for(uint8_t i = 0; i <= (sizeof(unOutputPins) / sizeof(uint8_t)); i++){
