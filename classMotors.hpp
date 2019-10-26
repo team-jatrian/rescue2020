@@ -2,7 +2,6 @@ class motor {
   private:
     uint8_t ubMappedSpeed;
     uint8_t unOutputPins[2] = {ENBL, PHASE};
-
     //genaue assignments noch fixen
     void setPhase(int8_t);
     uint8_t NewSpeed(uint8_t, uint8_t&);
@@ -10,13 +9,10 @@ class motor {
   public:
     uint8_t ubSpeed;
     uint8_t ubMaxSpeed = 255;
-
     //AENBL 2 APHASE 23 BENBL 0 BPHASE 26
     uint8_t ENBL;
     uint8_t PHASE;
-
     uint8_t ubEngineSwitch;
-
 
     void initPins(){
       for(uint8_t i = 0; i <= (sizeof(unOutputPins) / sizeof(uint8_t)); i++){
