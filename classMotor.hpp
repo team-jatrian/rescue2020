@@ -5,6 +5,7 @@ class motor {
     //genaue assignments noch fixen
     void setPhase(int8_t);
     uint8_t NewSpeed(uint8_t, uint8_t&);
+    void drive(int8_t);
 
   public:
     uint8_t ubSpeed;
@@ -19,19 +20,19 @@ class motor {
         pinMode(unOutputPins[i], OUTPUT);
       }
     }
-
-    void drive(int8_t nInputSpeed){
-      ubMappedSpeed = map(abs(nInputSpeed), 0, 100, 0, ubMaxSpeed);
-      setPhase(nInputSpeed);
-      if (ubEngineSwitch == 1){
-        analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
-      }
-      else {
-        digitalWrite(AENBL, LOW);
-        digitalWrite(BENBL, LOW);
-      }
-  }
 };
+
+void motor::drive(int8_t nInputSpeed){
+  ubMappedSpeed = map(abs(nInputSpeed), 0, 100, 0, ubMaxSpeed);
+  setPhase(nInputSpeed);
+  if (ubEngineSwitch == 1){
+    analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
+  }
+  else {
+    digitalWrite(AENBL, LOW);
+    digitalWrite(BENBL, LOW);
+  }
+}
 
 void motor::setPhase(int8_t nInputSpeed){
   if (nInputSpeed < 0){
