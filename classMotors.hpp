@@ -6,7 +6,7 @@ class motors {
 
     //genaue assignments noch fixen
     void setPhase(int8_t, int8_t);
-    uint8_t calcNewSpeed(int8_t, int8_t);
+    uint8_t NewSpeed(uint8_t, uint8_t&);
 
   public:
     uint8_t ubLeftSpeed;
@@ -14,16 +14,16 @@ class motors {
     uint8_t ubMaxLeftSpeed = 255;
     uint8_t ubMaxRightSpeed = 255;
 
-    uint8_t AENBL = 2;
-    uint8_t APHASE = 23;
-    uint8_t BENBL = 0;
-    uint8_t BPHASE = 26;
+    const uint8_t AENBL = 2;
+    const uint8_t APHASE = 23;
+    const uint8_t BENBL = 0;
+    const uint8_t BPHASE = 26;
 
     uint8_t ubEngineSwitch;
 
 
     void initPins(){
-      for(uint8_t i = 0; i <= (sizeof(nOutputPins) / sizeof(uint8_t)); i++){
+      for(uint8_t i = 0; i <= (sizeof(unOutputPins) / sizeof(uint8_t)); i++){
         pinMode(unOutputPins[i], OUTPUT);
       }
     }
@@ -33,8 +33,8 @@ class motors {
       ubRightMappedSpeed = map(abs(nRightSpeed), 0, 100, 0, ubMaxRightSpeed);
       setPhase(nLeftSpeed, nRightSpeed);
       if (ubEngineSwitch == 1){
-        analogWrite(AENBL, NewSpeed(ubLeftMappedSpeed, ubLeftSpeed))
-        analogWrite(BENBL, NewSpeed(ubRightMappedSpeed, ubRightSpeed))
+        analogWrite(AENBL, NewSpeed(ubLeftMappedSpeed, ubLeftSpeed));
+        analogWrite(BENBL, NewSpeed(ubRightMappedSpeed, ubRightSpeed));
       }
       else {
         digitalWrite(AENBL, LOW);
@@ -43,7 +43,7 @@ class motors {
   }
 };
 
-motors::setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
+void motors::setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
   if (nLeftSpeed < 0 && nRightSpeed < 0){
     digitalWrite(APHASE, HIGH);
     digitalWrite(BPHASE, LOW);
@@ -62,7 +62,7 @@ motors::setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
     }
   }
 
-motors::NewSpeed(int8_t nSetSpeed, int8_t &nCurrentSpeed){
+uint8_t motors::NewSpeed(uint8_t nSetSpeed, uint8_t& nCurrentSpeed){
   if (nSetSpeed > nCurrentSpeed){
     nCurrentSpeed += 5;
     return nCurrentSpeed;
