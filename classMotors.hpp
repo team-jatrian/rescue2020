@@ -1,23 +1,19 @@
-class motors {
+class motor {
   private:
-    uint8_t ubLeftMappedSpeed;
-    uint8_t ubRightMappedSpeed;
-    uint8_t unOutputPins[4] = {AENBL, APHASE, BENBL, BPHASE};
+    uint8_t ubMappedSpeed;
+    uint8_t unOutputPins[2] = {ENBL, PHASE};
 
     //genaue assignments noch fixen
-    void setPhase(int8_t, int8_t);
+    void setPhase(int8_t);
     uint8_t NewSpeed(uint8_t, uint8_t&);
 
   public:
-    uint8_t ubLeftSpeed;
-    uint8_t ubRightSpeed;
-    uint8_t ubMaxLeftSpeed = 255;
-    uint8_t ubMaxRightSpeed = 255;
+    uint8_t ubSpeed;
+    uint8_t ubMaxSpeed = 255;
 
-    const uint8_t AENBL = 2;
-    const uint8_t APHASE = 23;
-    const uint8_t BENBL = 0;
-    const uint8_t BPHASE = 26;
+    //AENBL 2 APHASE 23 BENBL 0 BPHASE 26
+    uint8_t ENBL;
+    uint8_t PHASE;
 
     uint8_t ubEngineSwitch;
 
@@ -28,13 +24,11 @@ class motors {
       }
     }
 
-    void drive(int8_t nLeftSpeed, int8_t nRightSpeed){
-      ubLeftMappedSpeed = map(abs(nLeftSpeed), 0, 100, 0, ubMaxLeftSpeed);
-      ubRightMappedSpeed = map(abs(nRightSpeed), 0, 100, 0, ubMaxRightSpeed);
-      setPhase(nLeftSpeed, nRightSpeed);
+    void drive(int8_t nInputSpeed){
+      ubMappedSpeed = map(abs(nInputSpeed), 0, 100, 0, ubMaxSpeed);
+      setPhase(nInputSpeed);
       if (ubEngineSwitch == 1){
-        analogWrite(AENBL, NewSpeed(ubLeftMappedSpeed, ubLeftSpeed));
-        analogWrite(BENBL, NewSpeed(ubRightMappedSpeed, ubRightSpeed));
+        analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
       }
       else {
         digitalWrite(AENBL, LOW);
@@ -43,31 +37,21 @@ class motors {
   }
 };
 
-void motors::setPhase(int8_t nLeftSpeed, int8_t nRightSpeed){
-  if (nLeftSpeed < 0 && nRightSpeed < 0){
-    digitalWrite(APHASE, HIGH);
-    digitalWrite(BPHASE, LOW);
+void motor::setPhase(int8_t nInputSpeed){
+  if (nInputSpeed < 0){
+    digitalWrite(PHASE, HIGH);
     }
-  else if (nLeftSpeed < 0){
-    digitalWrite(APHASE, HIGH);
-    digitalWrite(BPHASE, HIGH);
-    }
-  else if (nRightSpeed < 0){
-    digitalWrite(APHASE, LOW);
-    digitalWrite(BPHASE, LOW);
-    }
-  else {
-    digitalWrite(APHASE, LOW);
-    digitalWrite(BPHASE, HIGH);
+  else if (nRightSpeed > 0){
+    digitalWrite(PHASE, LOW);
     }
   }
 
-uint8_t motors::NewSpeed(uint8_t nSetSpeed, uint8_t& nCurrentSpeed){
-  if (nSetSpeed > nCurrentSpeed){
+uint8_t motor::NewSpeed(uint8_t nInputSpeed, uint8_t& nCurrentSpeed){
+  if (nInputSpeed > nCurrentSpeed){
     nCurrentSpeed += 5;
     return nCurrentSpeed;
   }
-  else if (nSetSpeed < nCurrentSpeed){
+  else if (nInputSpeed < nCurrentSpeed){
     nCurrentSpeed -= 5;
     return nCurrentSpeed;
   }
