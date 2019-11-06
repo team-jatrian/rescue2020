@@ -26,21 +26,15 @@ class motor {
 void motor::drive(int8_t nInputSpeed){
   ubMappedSpeed = map(abs(nInputSpeed), 0, 100, 0, ubMaxSpeed);
   setPhase(nInputSpeed);
-  if (ubEngineSwitch == 1){
-    analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
-  }
-  else {
-    digitalWrite(AENBL, LOW);
-    digitalWrite(BENBL, LOW);
-  }
+  analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
 }
 
 void motor::setPhase(int8_t nInputSpeed){
   if (nInputSpeed < 0){
-    digitalWrite(PHASE, HIGH);
-    }
-  else if (nRightSpeed > 0){
     digitalWrite(PHASE, LOW);
+    }
+  else if (nInputSpeed > 0){
+    digitalWrite(PHASE, HIGH);
     }
   }
 
