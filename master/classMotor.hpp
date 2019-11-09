@@ -1,13 +1,13 @@
 class motor {
   private:
-    uint8_t ubMappedSpeed;
+    int16_t bMappedSpeed;
     uint8_t unOutputPins[2] = {ENBL, PHASE};
-    //genaue assignments noch fixen
     void setPhase(int8_t);
-    uint8_t NewSpeed(uint8_t, uint8_t&);
+    uint16_t NewSpeed(int16_t, int16_t&);
+    int16_t nextSpeed;
 
   public:
-    uint8_t ubSpeed;
+    int16_t bSpeed;
     uint8_t ubMaxSpeed = 255;
     //AENBL 2 APHASE 23 BENBL 0 BPHASE 26
     uint8_t ENBL;
@@ -24,9 +24,10 @@ class motor {
 };
 
 void motor::drive(int8_t nInputSpeed){
-  ubMappedSpeed = map(abs(nInputSpeed), 0, 100, 0, ubMaxSpeed);
-  setPhase(nInputSpeed);
-  analogWrite(ENBL, NewSpeed(ubMappedSpeed, ubSpeed));
+  bMappedSpeed = map(nInputSpeed, -100, 100, -255, ubMaxSpeed);
+  nextSpeed = NewSpeed(bMappedSpeed, bSpeed);
+  setPhase(nextSpeed);
+  analogWrite(ENBL, abs(nextSpeed));
 }
 
 void motor::setPhase(int8_t nInputSpeed){
@@ -38,7 +39,7 @@ void motor::setPhase(int8_t nInputSpeed){
     }
   }
 
-uint8_t motor::NewSpeed(uint8_t nInputSpeed, uint8_t& nCurrentSpeed){
+uint16_t motor::NewSpeed(int16_t nInputSpeed, int16_t& nCurrentSpeed){
   if (nInputSpeed > nCurrentSpeed){
     nCurrentSpeed += 5;
     return nCurrentSpeed;
