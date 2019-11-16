@@ -4,7 +4,7 @@ class motor {
     int16_t speed = 0;
     uint8_t OutputPins[2] = {ENBL, PHASE};
     uint8_t InputPins[1] = {SWITCH};
-    boolean engineSwitch;
+    bool engineSwitch;
 
     void setPhase();
     void newSpeed();
